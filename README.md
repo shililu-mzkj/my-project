@@ -16,6 +16,7 @@
 ## 2019年度最受欢迎中国开源软件评选
 * 请为SpringBlade投上一票，非常感谢～
 * 投票地址：[https://www.oschina.net/project/top_cn_2019](https://www.oschina.net/project/top_cn_2019)
+* 投票赢三份基础技术文档限时活动：[https://sns.bladex.vip/note/view/3.html](https://sns.bladex.vip/note/view/3.html)
 
 ## SpringBlade微服务开发平台
 * 采用前后端分离的模式，前端开源两个框架：[Sword](https://gitee.com/smallc/Sword) (基于 React、Ant Design)、[Saber](https://gitee.com/smallc/Saber) (基于 Vue、Element-UI)
