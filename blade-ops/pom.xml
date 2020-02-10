@@ -17,7 +17,6 @@
         <module>blade-resource</module>
         <module>blade-seata-order</module>
         <module>blade-seata-storage</module>
-        <module>blade-zipkin</module>
     </modules>
 
 </project>
