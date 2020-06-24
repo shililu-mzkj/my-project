@@ -30,9 +30,17 @@
         <spring.platform.version>Cairo-SR8</spring.platform.version>
 
         <!-- 推荐使用Harbor -->
-        <docker.registry.url>10.211.55.5</docker.registry.url>
-        <docker.registry.host>http://${docker.registry.url}:2375</docker.registry.host>
-        <docker.plugin.version>1.2.0</docker.plugin.version>
+        <docker.registry.url>harbor.tech-mz.com</docker.registry.url>
+        <docker.registry.host>http://${docker.registry.url}</docker.registry.host>
+        <docker.plugin.version>1.0.0</docker.plugin.version>
+        <docker.image.prefix>blade</docker.image.prefix>
+
+        <dockerfile.maven.version>1.4.0</dockerfile.maven.version>
+        <docker.registry.name.prefix>121.36.241.123:80/test</docker.registry.name.prefix>
+
+
+        <docker.image.prefix>test</docker.image.prefix>
+        <docker.repository>121.36.241.123</docker.repository>
     </properties>
 
     <modules>

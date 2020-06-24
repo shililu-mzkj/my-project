@@ -60,6 +60,7 @@
                     <imageName>${docker.registry.url}/blade/${project.artifactId}:${project.version}</imageName>
                     <dockerDirectory>${project.basedir}</dockerDirectory>
                     <dockerHost>${docker.registry.host}</dockerHost>
+
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
