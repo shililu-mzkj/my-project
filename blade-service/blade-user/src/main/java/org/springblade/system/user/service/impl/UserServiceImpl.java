@@ -152,4 +152,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		return userList;
 	}
 
+	public static void main(String args[]){
+		System.out.println(DigestUtil.encrypt("123456"));
+	}
 }

@@ -60,6 +60,13 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springblade</groupId>
+            <artifactId>chatx-user-api</artifactId>
+            <version>${blade.project.version}</version>
+        </dependency>
+
         <!--Zipkin-->
         <!--<dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -97,7 +104,7 @@
                         </resource>
                     </resources>
                     <registryUrl>${docker.registry.url}</registryUrl>
-                    <serverId>${docker.registry.url}</serverId>
+                    <serverId>docker-harbor</serverId>
                     <pushImage>true</pushImage>
                 </configuration>
             </plugin>

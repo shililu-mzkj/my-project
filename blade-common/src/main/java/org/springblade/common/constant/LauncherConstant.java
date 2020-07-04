@@ -22,7 +22,7 @@ public interface LauncherConstant {
 	/**
 	 * nacos prod 地址
 	 */
-	String NACOS_PROD_ADDR = "172.30.0.48:8848";
+	String NACOS_PROD_ADDR = "139.159.183.33:8848";
 
 	/**
 	 * nacos test 地址
@@ -59,6 +59,22 @@ public interface LauncherConstant {
 	 */
 	String ZIPKIN_TEST_ADDR = "http://172.30.0.58:9411";
 
+
+	/**
+	 * sentinel dev 地址
+	 */
+	String NAMESPACE_DEV = "7e520b7f-0289-4d89-8282-96818f924c30";
+
+	/**
+	 * sentinel prod 地址
+	 */
+	String NAMESPACE_PROD = "172.30.0.58:8858";
+
+	/**
+	 * sentinel test 地址
+	 */
+	String NAMESPACE_TEST = "172.30.0.58:8858";
+
 	/**
 	 * 动态获取nacos地址
 	 *
@@ -90,6 +106,17 @@ public interface LauncherConstant {
 				return SENTINEL_TEST_ADDR;
 			default:
 				return SENTINEL_DEV_ADDR;
+		}
+	}
+
+	static String namespace(String profile) {
+		switch (profile) {
+			case (AppConstant.PROD_CODE):
+				return NAMESPACE_PROD;
+			case (AppConstant.TEST_CODE):
+				return NAMESPACE_TEST;
+			default:
+				return NAMESPACE_DEV;
 		}
 	}
 

@@ -33,4 +33,31 @@ public interface CommonConstant {
 	 */
 	String DEFAULT_PASSWORD = "123456";
 
+
+	String APPLICATION_CHATX_USER_NAME = "chatx-user";
+
+	String APPLICATION_CLIENT = "chatx";
+
+	/**
+	 * 验证码前缀
+	 */
+	String DEFAULT_CODE_KEY = "chatx_code_";
+
+	/**
+	 * 验证码长度
+	 */
+	String CODE_SIZE = "4";
+
+	/**
+	 * 验证码有效期
+	 */
+	int CODE_TIME = 60;
+
+	String SYSTEM_HEADER = "chatx-system";
+
+	String SYSTEM_HEADER_API ="chat-client";
+
+	String CHATX_HEADER = "chatx-auth";
+
+
 }

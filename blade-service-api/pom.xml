@@ -21,6 +21,8 @@
         <module>blade-system-api</module>
         <module>blade-user-api</module>
         <module>blade-demo-api</module>
+
+        <module>chatx-user-api</module>
     </modules>
 
     <dependencies>

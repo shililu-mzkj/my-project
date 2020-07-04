@@ -21,6 +21,7 @@ import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springblade.common.constant.CommonConstant;
 import org.springblade.gateway.props.AuthProperties;
 import org.springblade.gateway.provider.AuthProvider;
 import org.springblade.gateway.provider.ResponseProvider;
@@ -57,8 +58,22 @@ public class AuthFilter implements GlobalFilter, Ordered {
 			return chain.filter(exchange);
 		}
 		ServerHttpResponse resp = exchange.getResponse();
-		String headerToken = exchange.getRequest().getHeaders().getFirst(AuthProvider.AUTH_KEY);
-		String paramToken = exchange.getRequest().getQueryParams().getFirst(AuthProvider.AUTH_KEY);
+		//
+		String chatxSystem = exchange.getRequest().getHeaders().getFirst(AuthProvider.CHATX_SYSTEM);
+
+		String headerToken = "";
+		String paramToken = "";
+		if (StringUtils.isNotBlank(chatxSystem) && CommonConstant.SYSTEM_HEADER_API.equals(chatxSystem)) {
+			//校验方式改变
+			headerToken = exchange.getRequest().getHeaders().getFirst(AuthProvider.CHATX_AUTH_KEY);
+			paramToken = exchange.getRequest().getQueryParams().getFirst(AuthProvider.CHATX_AUTH_KEY);
+
+		} else {
+			headerToken = exchange.getRequest().getHeaders().getFirst(AuthProvider.AUTH_KEY);
+			paramToken = exchange.getRequest().getQueryParams().getFirst(AuthProvider.AUTH_KEY);
+
+		}
+
 		if (StringUtils.isAllBlank(headerToken, paramToken)) {
 			return unAuth(resp, "缺失令牌,鉴权失败");
 		}

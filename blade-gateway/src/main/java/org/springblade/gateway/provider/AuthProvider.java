@@ -15,6 +15,7 @@
  */
 package org.springblade.gateway.provider;
 
+import org.springblade.common.constant.CommonConstant;
 import org.springblade.core.launch.constant.TokenConstant;
 
 import java.util.ArrayList;
@@ -32,6 +33,11 @@ public class AuthProvider {
 	public static String AUTH_KEY = TokenConstant.HEADER;
 	private static List<String> defaultSkipUrl = new ArrayList<>();
 
+
+	public static String CHATX_SYSTEM = CommonConstant.SYSTEM_HEADER;
+
+	public static String CHATX_AUTH_KEY = CommonConstant.CHATX_HEADER;
+
 	static {
 		defaultSkipUrl.add("/example");
 		defaultSkipUrl.add("/token/**");
@@ -47,6 +53,11 @@ public class AuthProvider {
 		defaultSkipUrl.add("/storage/deduct/**");
 		defaultSkipUrl.add("/error/**");
 		defaultSkipUrl.add("/assets/**");
+
+		defaultSkipUrl.add("/chatx/token/**");
+		defaultSkipUrl.add("/mobile/**");
+		defaultSkipUrl.add("/smscode/**");
+
 	}
 
 	/**
