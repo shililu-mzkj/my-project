@@ -12,7 +12,8 @@ jobs:
             git diff --no-commit-id --name-only -r `git log -n 2 --oneline --pretty=format:"%h" | tail -n1` | cut -d/ -f1 | sort -u >  projects
             printf "Modified directories:\n"
             cat projects
-            printf ~/
+            printf ~/myproject
+            printf ls
             while read project; do
               if grep -Fxq $project project-dirs; then
                 printf "\nTriggerring build for project: "$project
