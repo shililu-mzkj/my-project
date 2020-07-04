@@ -15,6 +15,8 @@
  */
 package org.springblade.auth.utils;
 
+import org.springblade.chatx.user.entity.Member;
+import org.springblade.chatx.user.entity.MemberInfo;
 import org.springblade.core.launch.constant.TokenConstant;
 import org.springblade.core.secure.AuthInfo;
 import org.springblade.core.secure.TokenInfo;
@@ -91,5 +93,50 @@ public class TokenUtil {
 		param.put(TokenConstant.USER_ID, Func.toStr(user.getId()));
 		return SecureUtil.createJWT(param, "audience", "issuser", TokenConstant.REFRESH_TOKEN);
 	}
+
+
+	/**
+	 * 创建认证token
+	 *
+	 * @param member 用户信息
+	 * @return token
+	 */
+	public static AuthInfo createApiAuthInfo(Member member) {
+
+		//设置jwt参数
+		Map<String, String> param = new HashMap<>(16);
+		param.put(TokenConstant.TOKEN_TYPE, TokenConstant.ACCESS_TOKEN);
+		param.put(TokenConstant.TENANT_ID, member.getTenantId());
+		param.put(TokenConstant.USER_ID, Func.toStr(member.getId()));
+		param.put(TokenConstant.ACCOUNT, member.getMobile());
+		param.put(TokenConstant.USER_NAME, member.getMobile());
+
+
+		TokenInfo accessToken = SecureUtil.createJWT(param, "audience", "issmember", TokenConstant.ACCESS_TOKEN);
+
+		AuthInfo authInfo = new AuthInfo();
+		authInfo.setAccount(member.getMobile());
+		authInfo.setUserName(member.getNickName());
+		authInfo.setAccessToken(accessToken.getToken());
+		authInfo.setExpiresIn(accessToken.getExpire());
+		authInfo.setRefreshToken(createApiRefreshToken(member).getToken());
+		authInfo.setTokenType(TokenConstant.BEARER);
+		authInfo.setLicense("shili");
+
+		return authInfo;
+	}
+
+	/**
+	 * 创建refreshToken
+	 *
+	 * @return refreshToken
+	 */
+	private static TokenInfo createApiRefreshToken(Member member) {
+		Map<String, String> param = new HashMap<>(16);
+		param.put(TokenConstant.TOKEN_TYPE, TokenConstant.REFRESH_TOKEN);
+		param.put(TokenConstant.USER_ID, Func.toStr(member.getId()));
+		return SecureUtil.createJWT(param, "audience", "issuser", TokenConstant.REFRESH_TOKEN);
+	}
+
 
 }

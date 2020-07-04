@@ -16,14 +16,12 @@
 package org.springblade.auth.controller;
 
 import com.wf.captcha.SpecCaptcha;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
-import org.springblade.auth.granter.ITokenGranter;
-import org.springblade.auth.granter.TokenGranterBuilder;
-import org.springblade.auth.granter.TokenParameter;
+import org.springblade.auth.granter.*;
 import org.springblade.auth.utils.TokenUtil;
+import org.springblade.chatx.user.entity.Member;
+import org.springblade.chatx.user.feign.IMemberClient;
 import org.springblade.common.cache.CacheNames;
 import org.springblade.core.secure.AuthInfo;
 import org.springblade.core.tool.api.R;
@@ -32,10 +30,7 @@ import org.springblade.core.tool.utils.Func;
 import org.springblade.core.tool.utils.RedisUtil;
 import org.springblade.core.tool.utils.WebUtil;
 import org.springblade.system.user.entity.UserInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +46,8 @@ import java.util.concurrent.TimeUnit;
 public class AuthController {
 
 	private RedisUtil redisUtil;
+
+	private IMemberClient memberClient;
 
 	@PostMapping("token")
 	@ApiOperation(value = "获取认证token", notes = "传入租户ID:tenantId,账号:account,密码:password")
@@ -90,6 +87,50 @@ public class AuthController {
 		redisUtil.set(CacheNames.CAPTCHA_KEY + key, verCode, 30L, TimeUnit.MINUTES);
 		// 将key和base64返回给前端
 		return R.data(Kv.init().set("key", key).set("image", specCaptcha.toBase64()));
+	}
+
+
+	@PostMapping("/chatx/token")
+	@ApiOperation(value = "短信验证码登录", notes = "传入租户ID:tenantId,账号:account,密码:password")
+	public R<AuthInfo> chatxToken(@ApiParam(value = "授权类型", required = true) @RequestParam(defaultValue = "password", required = false) String grantType,
+								  @ApiParam(value = "刷新令牌") @RequestParam(required = false) String refreshToken,
+								  @ApiParam(value = "租户ID", required = true) @RequestParam(defaultValue = "000000", required = false) String tenantId,
+								  @ApiParam(value = "账号") @RequestParam(required = false) String account,
+								  @ApiParam(value = "code") @RequestParam(required = false) String code,
+								  @ApiParam(value = "密码") @RequestParam(required = false) String password) {
+
+
+		String userType = Func.toStr(WebUtil.getRequest().getHeader(TokenUtil.USER_TYPE_HEADER_KEY), TokenUtil.DEFAULT_USER_TYPE);
+
+		TokenParameter tokenParameter = new TokenParameter();
+		tokenParameter.getArgs().set("tenantId", tenantId)
+			.set("account", account)
+			.set("password", password)
+			.set("code",code)
+			.set("grantType", grantType)
+			.set("refreshToken", refreshToken)
+			.set("userType", userType);
+
+		IChatxTokenGranter granter = ChatxTokenGranterBuilder.getGranter(grantType);
+		Member member = granter.grant(tokenParameter);
+
+		if (member == null || member.getId() == null) {
+			return R.fail(TokenUtil.USER_NOT_FOUND);
+		}
+
+		return R.data(TokenUtil.createApiAuthInfo(member));
+	}
+
+	@GetMapping("/smscode")
+	@ApiOperation(value = "获取短信验证码--发送类型:1:登录 2:注册 3:忘记密码")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "sendType", value = "发送类型:1:登录 2:注册 3:忘记密码", required = true, dataType = "String", paramType = "query"),
+		@ApiImplicitParam(name = "mobile", value = "手机号", dataType = "String", paramType = "query")
+	})
+	public R<String> sendSmsCode(@RequestParam String mobile, @RequestParam Integer sendType) {
+		R result=memberClient.sendCode(mobile,sendType);
+		String ret =result.isSuccess() ? result.getMsg().toString() : null;
+		return R.data(ret);
 	}
 
 }

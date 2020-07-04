@@ -32,7 +32,7 @@
         <!-- 推荐使用Harbor -->
         <docker.registry.url>harbor.tech-mz.com</docker.registry.url>
         <docker.registry.host>http://${docker.registry.url}:2375</docker.registry.host>
-        <docker.plugin.version>1.0.0</docker.plugin.version>
+        <docker.plugin.version>1.2.0</docker.plugin.version>
         <docker.image.prefix>blade</docker.image.prefix>
 
         <dockerfile.maven.version>1.4.0</dockerfile.maven.version>

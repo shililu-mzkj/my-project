@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.chatx.user.mapper.MemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="memberResultMap" type="org.springblade.chatx.user.entity.Member">
+        <id column="id" property="id"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="user_num" property="userNum"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="sex" property="sex"/>
+        <result column="avatar" property="avatar"/>
+        <result column="thumbnail" property="thumbnail"/>
+        <result column="channel" property="channel"/>
+        <result column="arear_id" property="arearId"/>
+        <result column="birthday" property="birthday"/>
+        <result column="wx_openid" property="wxOpenid"/>
+        <result column="qq_openid" property="qqOpenid"/>
+        <result column="email" property="email"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="height" property="height"/>
+        <result column="weight" property="weight"/>
+        <result column="sigin" property="sigin"/>
+        <result column="video_price" property="videoPrice"/>
+        <result column="voice_price" property="voicePrice"/>
+        <result column="user_type" property="userType"/>
+    </resultMap>
+
+
+    <select id="selectMemberPage" resultMap="memberResultMap">
+        select * from u_member where is_deleted = 0
+    </select>
+
+    <select id="getUser" resultMap="memberResultMap">
+        SELECT
+            *
+        FROM
+            u_member
+        WHERE
+            tenant_id = #{param1} and mobile = #{param2} and password = #{param3} and is_deleted = 0
+    </select>
+
+</mapper>
