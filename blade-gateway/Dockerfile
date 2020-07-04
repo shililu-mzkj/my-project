@@ -1,15 +1,37 @@
-FROM anapsix/alpine-java:8_server-jre_unlimited
+#FROM anapsix/alpine-java:8_server-jre_unlimited
+#
+#MAINTAINER smallchill@163.com
+#
+#RUN mkdir -p /blade/gateway
+#
+#WORKDIR /blade/gateway
+#
+#EXPOSE 80
+#
+#ADD ./target/blade-gateway.jar ./app.jar
+#
+#
+#ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+#
+#CMD ["--spring.profiles.active=test"]
 
-MAINTAINER smallchill@163.com
 
-RUN mkdir -p /blade/gateway
+FROM openjdk:8-jre-alpine
+ARG ARTIFACT_NAME
+ARG EXPOSED_PORT
 
-WORKDIR /blade/gateway
+ADD ${ARTIFACT_NAME}.jar /usr/share/app.jar
 
-EXPOSE 80
-
-ADD ./target/blade-gateway.jar ./app.jar
+EXPOSE ${EXPOSED_PORT}
+# ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/usr/share/app.jar"]
+ENTRYPOINT exec java $JAVA_OPTS  -jar /usr/share/app.jar
 
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
 
 CMD ["--spring.profiles.active=test"]
+
+
+
+# for circleci demo
+
+#for circleci test1111111111111111
