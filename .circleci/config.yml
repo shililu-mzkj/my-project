@@ -1,0 +1,89 @@
+version: 2.7.0
+
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8u242-jdk
+    steps:
+      - checkout
+      - run:
+          name: Determine which directories have changed
+          command: |
+            git diff --no-commit-id --name-only -r `git log -n 2 --oneline --pretty=format:"%h" | tail -n1` | cut -d/ -f1 | sort -u >  projects
+            printf "Modified directories:\n"
+            cat projects
+            while read project; do
+              if grep -Fxq $project project-dirs; then
+                printf "\nTriggerring build for project: "$project
+                curl -s -u ${CIRCLE_TOKEN}: -d build_parameters[CIRCLE_JOB]=${project} https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH
+              fi
+            done < projects
+  blade-gateway:
+    docker:
+      - image: circleci/openjdk:8u242-jdk
+    working_directory: ~/SpringBlade/blade-gateway
+    steps:
+      - build-service:
+          service-name: "blade-gateway"
+  blade-auth:
+    docker:
+      - image: circleci/openjdk:8u242-jdk
+    working_directory: ~/SpringBlade/blade-auth
+    steps:
+      - build-service:
+          service-name: "blade-auth"
+  chatx-user:
+    docker:
+      - image: circleci/openjdk:8u242-jdk
+    working_directory: ~/SpringBlade/chatx-user
+    steps:
+      - build-service:
+          service-name: "chatx-user"
+#  blade-user:
+#    docker:
+#      - image: circleci/openjdk:8u242-jdk
+#    working_directory: ~/SpringBlade/blade-user
+#    steps:
+#      - build-service:
+#          service-name: "blade-user"
+
+commands:
+  build-service:
+    description: "Build a service and push image to dockerhub"
+    parameters:
+      service-name:
+        type: string
+    steps:
+      # git pull
+      - checkout:
+          path: ~/SpringBlade
+
+      - setup_remote_docker
+
+      - run:
+          name: Login to Dockerhub
+          #          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          command: docker login harbor.tech-mz.com -u shililu -p Lumw@19880902
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - << parameters.service-name >>-{{ checksum "pom.xml"}}
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: << parameters.service-name >>-{{ checksum "pom.xml"}}
+
+      # package into a jar and build image
+      - run: mvn clean package -Ddocker.image.tag=Build-${CIRCLE_BUILD_NUM}-CI -Ddockerfile.maven.settings.auth=false
+
+      # push docker image to docker hub
+      - run: mvn dockerfile:push -Ddocker.image.tag=Build-${CIRCLE_BUILD_NUM}-CI
+
+      # store raw content of src code
+      - store_artifacts:
+          path: target/classes
+          destination: spring-petclinic-<< parameters.service-name >>
