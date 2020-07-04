@@ -86,4 +86,4 @@ commands:
       # store raw content of src code
       - store_artifacts:
           path: target/classes
-          destination: spring-petclinic-<< parameters.service-name >>
+          destination: chatx-<< parameters.service-name >>
