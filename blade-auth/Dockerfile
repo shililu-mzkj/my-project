@@ -16,6 +16,7 @@
 #CMD ["--spring.profiles.active=test"]
 
 
+
 FROM openjdk:8-jre-alpine
 ARG ARTIFACT_NAME
 ARG EXPOSED_PORT
