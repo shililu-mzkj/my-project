@@ -23,21 +23,21 @@ jobs:
   blade-gateway:
     docker:
       - image: circleci/openjdk:8u242-jdk
-    working_directory: ~/myproject/blade-gateway
+    working_directory: ~/my-project/blade-gateway
     steps:
       - build-service:
           service-name: "blade-gateway"
   blade-auth:
     docker:
       - image: circleci/openjdk:8u242-jdk
-    working_directory: ~/myproject/blade-auth
+    working_directory: ~/my-project/blade-auth
     steps:
       - build-service:
           service-name: "blade-auth"
   chatx-user:
     docker:
       - image: circleci/openjdk:8u242-jdk
-    working_directory: ~/myproject/blade-service/chatx-user
+    working_directory: ~/my-project/blade-service/chatx-user
     steps:
       - build-service:
           service-name: "chatx-user"
@@ -58,7 +58,7 @@ commands:
     steps:
       # git pull
       - checkout:
-          path: ~/myproject
+          path: ~/my-project
 
       - setup_remote_docker
 
