@@ -6,6 +6,7 @@ RUN mkdir -p /blade/gateway
 
 WORKDIR /blade/gateway
 
+
 EXPOSE 80
 
 ADD ./target/blade-gateway.jar ./app.jar
